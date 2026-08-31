@@ -41,6 +41,9 @@ A dedicated Data Flow activity (**`GoldLayer`**) joins, aggregates, and applies 
 
 ## 🥉 Bronze Layer
 
+<img width="796" height="112" alt="image" src="https://github.com/user-attachments/assets/47b5b093-6546-439b-a910-1f2899d4662e" />
+
+
 ### Purpose
 The Bronze layer is the landing zone for raw data, ingested as close to its original form as possible from all source systems. It preserves data lineage and allows reprocessing without going back to the source.
 
