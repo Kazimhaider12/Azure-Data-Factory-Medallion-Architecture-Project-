@@ -1,0 +1,19 @@
+{
+	"name": "JsonGet_API_git",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedservices_github",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "/Kazimhaider12/ADF_Industrial_Project/refs/heads/main/DimAirport.json"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

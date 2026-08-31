@@ -1,0 +1,81 @@
+{
+	"name": "API Ingection",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data API",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "WebAPI",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "JsonGet_API_git",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_data_json_APi",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "WebAPI",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://raw.githubusercontent.com/Kazimhaider12/ADF_Industrial_Project/refs/heads/main/DimAirport.json"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-08-28T10:32:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

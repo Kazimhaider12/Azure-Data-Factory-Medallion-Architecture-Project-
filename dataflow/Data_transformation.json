@@ -1,0 +1,308 @@
+{
+	"name": "Data_transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Bronze_onprem",
+						"type": "DatasetReference"
+					},
+					"name": "DimAirline"
+				},
+				{
+					"dataset": {
+						"referenceName": "source_onprem_bronse",
+						"type": "DatasetReference"
+					},
+					"name": "DimFlight"
+				},
+				{
+					"dataset": {
+						"referenceName": "source_onprem_bron",
+						"type": "DatasetReference"
+					},
+					"name": "DimPassenger"
+				},
+				{
+					"dataset": {
+						"referenceName": "Source_SQl",
+						"type": "DatasetReference"
+					},
+					"name": "FactBookings"
+				},
+				{
+					"dataset": {
+						"referenceName": "Source_API",
+						"type": "DatasetReference"
+					},
+					"name": "DimAirport"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "linkedservices_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkDimAirline"
+				},
+				{
+					"linkedService": {
+						"referenceName": "linkedservices_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkDimFlight"
+				},
+				{
+					"linkedService": {
+						"referenceName": "linkedservices_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkDimPassenger"
+				},
+				{
+					"linkedService": {
+						"referenceName": "linkedservices_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkFactBookings"
+				},
+				{
+					"linkedService": {
+						"referenceName": "linkedservices_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkDimAirport"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColCountry"
+				},
+				{
+					"name": "deletecolumn"
+				},
+				{
+					"name": "totalflights"
+				},
+				{
+					"name": "renamecol"
+				},
+				{
+					"name": "derivedgenderflagM"
+				},
+				{
+					"name": "derivedgenderflagF"
+				},
+				{
+					"name": "filterGreater25"
+				},
+				{
+					"name": "castticketcost"
+				},
+				{
+					"name": "DerCSet"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "alterUpsert"
+				},
+				{
+					"name": "alterUpsert2"
+				},
+				{
+					"name": "alterUpsert3"
+				},
+				{
+					"name": "alterUpsert4"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          airline_id as short,",
+				"          airline_name as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> DimAirline",
+				"source(output(",
+				"          flight_id as short,",
+				"          flight_number as string,",
+				"          departure_time as string,",
+				"          arrival_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> DimFlight",
+				"source(output(",
+				"          passenger_id as short,",
+				"          full_name as string,",
+				"          gender as string,",
+				"          age as short,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> DimPassenger",
+				"source(output(",
+				"          booking_id as integer,",
+				"          passenger_id as integer,",
+				"          flight_id as integer,",
+				"          airline_id as integer,",
+				"          origin_airport_id as integer,",
+				"          destination_airport_id as integer,",
+				"          booking_date as date,",
+				"          ticket_cost as decimal(10,2),",
+				"          flight_duration_mins as integer,",
+				"          checkin_status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> FactBookings",
+				"source(output(",
+				"          airport_id as short,",
+				"          airport_name as string,",
+				"          city as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 100,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> DimAirport",
+				"DimAirline derive(country = upper(country)) ~> derivedColCountry",
+				"DimFlight select(mapColumn(",
+				"          flight_id,",
+				"          flight_number,",
+				"          arrival_time",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> deletecolumn",
+				"deletecolumn aggregate(flight_number = count(flight_number)) ~> totalflights",
+				"DimPassenger select(mapColumn(",
+				"          passenger_id,",
+				"          full_name,",
+				"          gender_flag = gender,",
+				"          age,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> renamecol",
+				"renamecol derive(gender_flag = regexReplace(gender_flag,'M','Male')) ~> derivedgenderflagM",
+				"derivedgenderflagM derive(gender_flag = regexReplace(gender_flag,'F','Female')) ~> derivedgenderflagF",
+				"derivedgenderflagF filter(age>=25) ~> filterGreater25",
+				"FactBookings cast(output(",
+				"          ticket_cost as integer",
+				"     ),",
+				"     errors: true) ~> castticketcost",
+				"DimAirport derive(airport_name = upper(airport_name)) ~> DerCSet",
+				"derivedColCountry alterRow(upsertIf(0<1)) ~> alterRow1",
+				"deletecolumn alterRow(upsertIf(1==1)) ~> alterUpsert",
+				"filterGreater25 alterRow(upsertIf(1==1)) ~> alterUpsert2",
+				"castticketcost alterRow(upsertIf(1==1)) ~> alterUpsert3",
+				"DerCSet alterRow(upsertIf(1==1)) ~> alterUpsert4",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sliver',",
+				"     folderPath: 'DimAirline',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['airline_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkDimAirline",
+				"alterUpsert sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sliver',",
+				"     folderPath: 'DimFlight',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['flight_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkDimFlight",
+				"alterUpsert2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sliver',",
+				"     folderPath: 'DimPassenger',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['passenger_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkDimPassenger",
+				"alterUpsert3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sliver',",
+				"     folderPath: 'FactBookings',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['booking_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkFactBookings",
+				"alterUpsert4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sliver',",
+				"     folderPath: 'DimAirport',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['airport_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkDimAirport"
+			]
+		}
+	}
+}

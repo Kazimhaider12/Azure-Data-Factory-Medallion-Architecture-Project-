@@ -1,0 +1,15 @@
+{
+	"name": "kazimadfproject1",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "aedeb490-4c4e-437b-9b5d-d5ded2c33c34",
+		"tenantId": "6376e26e-0b25-4bfd-83eb-82dc6a8ff828"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Linkedservice_onpremise_file",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\ADF_Self-Hosted-On-Premise-data(LS - Host)",
+			"userId": "THISLAPTOP",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZTk2ZjM2Yy0xMjcyLTQxODctYjdiZS02ODM5YzRkMzNhNzEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "kazimintegrationruntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"name": "Source_now_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linked_services_sql_data",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

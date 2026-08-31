@@ -1,0 +1,6 @@
+{
+	"name": "kazimintegrationruntime",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

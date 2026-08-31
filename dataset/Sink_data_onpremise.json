@@ -1,0 +1,33 @@
+{
+	"name": "Sink_data_onpremise",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedservices_datalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"para_files": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().para_files",
+					"type": "Expression"
+				},
+				"folderPath": "onpremise",
+				"fileSystem": "bronze"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

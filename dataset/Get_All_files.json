@@ -1,0 +1,31 @@
+{
+	"name": "Get_All_files",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Linkedservice_onpremise_file",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"para_files": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": {
+					"value": "@dataset().para_files",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
