@@ -5,12 +5,12 @@
 		"annotations": [],
 		"type": "FileServer",
 		"typeProperties": {
-			"host": "C:\\ADF_Self-Hosted-On-Premise-data(LS - Host)",
-			"userId": "THISLAPTOP",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZTk2ZjM2Yy0xMjcyLTQxODctYjdiZS02ODM5YzRkMzNhNzEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"host": "C:\\ drive folder must selected",
+			"userId": "Enter your computer name",
+			"encryptedCredential": "____"
 		},
 		"connectVia": {
-			"referenceName": "kazimintegrationruntime",
+			"referenceName": "integrationruntime",
 			"type": "IntegrationRuntimeReference"
 		}
 	}
