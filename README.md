@@ -70,6 +70,8 @@ Raw datasets available for the Silver layer to consume: Raw Airline, Raw Flight,
 
 ## 🥈 Silver Layer
 
+<img width="1076" height="426" alt="image" src="https://github.com/user-attachments/assets/65a2b90c-39c3-4be1-86ad-2f8fa6bc9add" />
+
 ### Purpose
 The Silver layer cleans, standardizes, and transforms Bronze data so it's trustworthy and consistent for downstream use. Built as a single ADF **Data Flow** named **`SilverLayer`**.
 
@@ -141,6 +143,7 @@ DimAirline, DimFlight (+ TotalFlights aggregate), DimPassenger (filtered, flagge
 ---
 
 ## 🥇 Gold Layer
+<img width="1446" height="520" alt="image" src="https://github.com/user-attachments/assets/c169958f-6086-41ae-89f2-c567d4d186bf" />
 
 ### Purpose
 The Gold layer applies business-level logic — joins, aggregations, and window functions across Silver datasets — to produce final, reporting-ready fact tables. Built as a single ADF **Data Flow** named **`GoldLayer`**.
